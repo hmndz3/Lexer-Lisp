@@ -82,10 +82,10 @@ public class LexerLisp {
     // verificador de la entrada en cuanto a cantidad de parentesis, debe existir un balance de 0 para que sea correcto 
     public static boolean cantParentesis(String expresionIngresada) {
         int balanceParentesis = 0;
-        
+
         for (int i = 0; i < expresionIngresada.length(); i++) {
             char simbolos = expresionIngresada.charAt(i);
-            
+
             // por cada parentesis suma o resta al contador para verificar su balance
             switch (simbolos) {
                 case '(':
@@ -95,12 +95,30 @@ public class LexerLisp {
                     balanceParentesis--;
                     break;
             }
-    
+
             if (balanceParentesis < 0) {
-                return false; 
+                return false;
             }
         }
         return balanceParentesis == 0;
+    }
+
+    public static void tokenizar(String expresion) {
+        // Agregamos espacios alrededor de cada paréntesis para asegurarnos que queden como tokens independientes.
+        String modificada = expresion.replace("(", " ( ").replace(")", " ) ");
+        // Separamos la cadena por espacios en blanco.
+        String[] tokens = modificada.trim().split("\\s+");
+        
+        System.out.println("\nTokens obtenidos:");
+        // Imprimimos los tokens en el formato: (,+,2,(,*,V,8,),)
+        System.out.print("[");
+        for (int i = 0; i < tokens.length; i++) {
+            System.out.print(tokens[i]);
+            if (i < tokens.length - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println("]");
     }
     
 }
