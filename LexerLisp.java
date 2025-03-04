@@ -35,12 +35,18 @@ public class LexerLisp {
             lector.close();
             return;
         }
+
+        if (!cantParentesis(expresionCompleta)) {
+            System.out.println("No estan balanceados los parentesis, revisar expresion ingresada");
+            lector.close();
+            return;
+        }
+
         // Expresion que el usuario mando.
         System.out.println("\nExpresión que ingresó: " + expresionCompleta);
         
         // Buscamos palabras reservadas en la expresión
         buscarPalabrasReservadas(expresionCompleta);        
-        lector.close();
     }
     
     /**
@@ -79,7 +85,8 @@ public class LexerLisp {
         
         for (int i = 0; i < expresionIngresada.length(); i++) {
             char simbolos = expresionIngresada.charAt(i);
-
+            
+            // por cada parentesis suma o resta al contador para verificar su balance
             switch (simbolos) {
                 case '(':
                     balanceParentesis++;
