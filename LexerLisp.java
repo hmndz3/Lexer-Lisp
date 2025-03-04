@@ -72,4 +72,28 @@ public class LexerLisp {
             System.out.println("No se encontraron palabras reservadas en la expresión.");
         }
     }
+
+    // verificador de la entrada en cuanto a cantidad de parentesis, debe existir un balance de 0 para que sea correcto 
+    public static boolean cantParentesis(String expresionIngresada) {
+        int balanceParentesis = 0;
+        
+        for (int i = 0; i < expresionIngresada.length(); i++) {
+            char simbolos = expresionIngresada.charAt(i);
+
+            switch (simbolos) {
+                case '(':
+                    balanceParentesis++;
+                    break;
+                case ')':
+                    balanceParentesis--;
+                    break;
+            }
+    
+            if (balanceParentesis < 0) {
+                return false; 
+            }
+        }
+        return balanceParentesis == 0;
+    }
+    
 }
