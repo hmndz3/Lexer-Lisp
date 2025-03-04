@@ -113,7 +113,6 @@ public class LexerLisp {
         String[] tokens = modificada.trim().split("\\s+");
         
         System.out.println("\nTokens obtenidos:");
-        // Imprimimos los tokens en el formato: (,+,2,(,*,V,8,),)
         System.out.print("[");
         for (int i = 0; i < tokens.length; i++) {
             System.out.print(tokens[i]);
