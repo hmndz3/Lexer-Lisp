@@ -46,7 +46,10 @@ public class LexerLisp {
         System.out.println("\nExpresión que ingresó: " + expresionCompleta);
         
         // Buscamos palabras reservadas en la expresión
-        buscarPalabrasReservadas(expresionCompleta);        
+        buscarPalabrasReservadas(expresionCompleta);
+        
+        // Llamada al método de tokenización
+        tokenizar(expresionCompleta);
     }
     
     /**
