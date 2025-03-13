@@ -35,13 +35,13 @@ public class LexerLisp {
             lector.close();
             return;
         }
-
+    
         if (!cantParentesis(expresionCompleta)) {
             System.out.println("No estan balanceados los parentesis, revisar expresion ingresada");
             lector.close();
             return;
         }
-
+    
         // Expresion que el usuario mando.
         System.out.println("\nExpresión que ingresó: " + expresionCompleta);
         
@@ -49,7 +49,14 @@ public class LexerLisp {
         buscarPalabrasReservadas(expresionCompleta);
         
         // Llamada al método de tokenización
-        tokenizar(expresionCompleta);
+        String[] tokens = tokenizar(expresionCompleta);
+        
+        // Parsear los tokens y mostrar la estructura de listas
+        String resultadoParseo = parseLisp(tokens);
+        System.out.println("\nEstructura parseada:");
+        System.out.println(resultadoParseo);
+        
+        lector.close();
     }
     
     /**
@@ -106,7 +113,7 @@ public class LexerLisp {
         return balanceParentesis == 0;
     }
 
-    public static void tokenizar(String expresion) {
+    public static String[] tokenizar(String expresion) {
         // Agregamos espacios alrededor de cada paréntesis para asegurarnos que queden como tokens independientes.
         String modificada = expresion.replace("(", " ( ").replace(")", " ) ");
         // Separamos la cadena por espacios en blanco.
@@ -121,6 +128,51 @@ public class LexerLisp {
             }
         }
         System.out.println("]");
+        
+        return tokens; // Ahora retornamos los tokens para usarlos en el parser
     }
-    
+
+//---------------------------------------------------------------------Nuevos metodos para el parser.
+    public static String parseLisp(String[] tokens) {
+        int[] pos = {0}; //Usamos un array para que el índice sea modificable por referencia
+        return parseExpression(tokens, pos);
+    }
+
+    private static String parseExpression(String[] tokens, int[] pos) {
+        //Verificar que estamos en un paréntesis de apertura
+        if (pos[0] >= tokens.length || !tokens[pos[0]].equals("(")) {
+            return "Error: Se esperaba '(' en la posición " + pos[0];
+        }
+        
+        //Saltar el paréntesis de apertura
+        pos[0]++;
+        
+        StringBuilder resultado = new StringBuilder();
+        resultado.append("[");
+        
+        // Obtener el operador o nombre de función
+        if (pos[0] >= tokens.length) {
+            return "Error: Fin inesperado de la entrada después de '('";
+        }
+        resultado.append(tokens[pos[0]]);
+        pos[0]++;
+        
+        // Procesar argumentos
+        while (pos[0] < tokens.length && !tokens[pos[0]].equals(")")) {
+            resultado.append(" "); // Espacio entre elementos
+            if (tokens[pos[0]].equals("(")) {
+                resultado.append(parseExpression(tokens, pos));
+            } else {
+                resultado.append(tokens[pos[0]]);
+                pos[0]++;
+            }
+        }
+        // Verificar y saltar el paréntesis de cierre
+        if (pos[0] >= tokens.length || !tokens[pos[0]].equals(")")) {
+            return "Error: Se esperaba ')' en la posición " + pos[0];
+        }
+        pos[0]++; 
+        resultado.append("]");
+        return resultado.toString();
+    }
 }
