@@ -80,33 +80,50 @@ public class Interpreter {
 
     public Object evaluateArithmetic(String operator, Object[] operands) {
         double resultado = 0;
-
+        
+        // Primero evaluar cada operando
+        Object[] evaluatedOperands = new Object[operands.length];
+        for (int i = 0; i < operands.length; i++) {
+            Object evaluatedOperand = Evaluator.evaluate(operands[i], this);
+            evaluatedOperands[i] = evaluatedOperand;
+        }
+    
         switch (operator) {
             case "+":
-                for (Object operand : operands) {
+                resultado = 0;
+                for (Object operand : evaluatedOperands) {
                     resultado += Double.parseDouble(operand.toString());
                 }
                 break;
             case "-":
-                resultado = Double.parseDouble(operands[0].toString());
-                for (int i = 1; i < operands.length; i++) {
-                    resultado -= Double.parseDouble(operands[i].toString());
+                resultado = Double.parseDouble(evaluatedOperands[0].toString());
+                for (int i = 1; i < evaluatedOperands.length; i++) {
+                    resultado -= Double.parseDouble(evaluatedOperands[i].toString());
                 }
                 break;
             case "*":
                 resultado = 1;
-                for (Object operand : operands) {
+                for (Object operand : evaluatedOperands) {
                     resultado *= Double.parseDouble(operand.toString());
                 }
                 break;
             case "/":
-                resultado = Double.parseDouble(operands[0].toString());
-                for (int i = 1; i < operands.length; i++) {
-                    resultado /= Double.parseDouble(operands[i].toString());
+                resultado = Double.parseDouble(evaluatedOperands[0].toString());
+                for (int i = 1; i < evaluatedOperands.length; i++) {
+                    double divisor = Double.parseDouble(evaluatedOperands[i].toString());
+                    if (divisor == 0) {
+                        throw new ArithmeticException("División por cero");
+                    }
+                    resultado /= divisor;
                 }
                 break;
             default:
                 throw new UnsupportedOperationException("Operador no soportado: " + operator);
+        }
+        
+        // Si el resultado es un entero, retornarlo como tal
+        if (resultado == Math.floor(resultado)) {
+            return (int) resultado;
         }
         return resultado;
     }

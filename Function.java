@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.Map;
 
 public class Function {
@@ -13,10 +12,21 @@ public class Function {
     }
 
     public Object call(Object[] args, Map<String, Object> environment) {
-        Map<String, Object> localEnv = new HashMap<>(environment);
+        // Crear una nueva instancia de Interpreter con el entorno actual
+        Interpreter localInterpreter = new Interpreter();
+        Map<String, Object> localEnv = localInterpreter.getEnvironment();
+        
+        // Copiar el entorno global
+        localEnv.putAll(environment);
+        
+        // Agregar los parámetros al entorno local
         for (int i = 0; i < parameters.length; i++) {
-            localEnv.put(parameters[i].toString(), args[i]);
+            // Evaluar los argumentos
+            Object evaluatedArg = Evaluator.evaluate(args[i], interpreter);
+            localEnv.put(parameters[i].toString(), evaluatedArg);
         }
-        return Evaluator.evaluate(body, interpreter);
+        
+        // Evaluar el cuerpo usando el intérprete local
+        return Evaluator.evaluate(body, localInterpreter);
     }
 }
