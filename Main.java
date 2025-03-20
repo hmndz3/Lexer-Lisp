@@ -24,17 +24,18 @@ public class Main {
         }
 
         if (!Utils.cantParentesis(expresionCompleta)) {
-            System.out.println("No estan balanceados los parentesis, revisar expresion ingresada");
+            System.out.println("No están balanceados los paréntesis, revisar expresión ingresada");
             lector.close();
             return;
         }
 
         System.out.println("\nExpresión que ingresó: " + expresionCompleta);
         Lexer.buscarPalabrasReservadas(expresionCompleta);
-        String[] tokens = Lexer.tokenizar(expresionCompleta);
-        String resultadoParseo = Parser.parseLisp(tokens);
-        System.out.println("\nEstructura parseada:");
-        System.out.println(resultadoParseo);
+
+        Interpreter interpreter = new Interpreter();
+        Object resultado = interpreter.evaluate(expresionCompleta);
+        System.out.println("\nResultado de la evaluación:");
+        System.out.println(resultado);
 
         lector.close();
     }
