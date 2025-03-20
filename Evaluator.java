@@ -2,11 +2,15 @@ import java.util.List;
 import java.util.Map;
 
 public class Evaluator {
+    @SuppressWarnings("unchecked")
     public static Object evaluate(Object expression, Interpreter interpreter) {
         Map<String, Object> environment = interpreter.getEnvironment();
 
-        if (expression instanceof List) {
-            List<Object> list = (List<Object>) expression;
+        if (expression instanceof List<?>) {
+            List<?> list = (List<?>) expression;
+            if (list.isEmpty() || !(list.get(0) instanceof String)) {
+                throw new IllegalArgumentException("Expresión no válida");
+            }
             String operator = (String) list.get(0);
             switch (operator) {
                 case "+":
@@ -17,14 +21,17 @@ public class Evaluator {
                 case "quote":
                     return interpreter.quote(list.get(1));
                 case "defun":
-                    interpreter.defun((String) list.get(1), (Object[]) list.get(2), list.get(3));
-                    return null;
+                    String functionName = (String) list.get(1);
+                    List<?> parameters = (List<?>) list.get(2);
+                    Object body = list.get(3);
+                    interpreter.defun(functionName, parameters.toArray(), body);
+                    return "Function " + functionName + " defined.";
                 case "setq":
-                    return setq(list, interpreter);
+                    return setq((List<Object>) list, interpreter);
                 case "atom":
                     return atom(list.get(1));
                 case "list":
-                    return list(list.subList(1, list.size()));
+                    return list((List<Object>) list.subList(1, list.size()));
                 case "equal":
                     return equal(list.get(1), list.get(2));
                 case "<":
@@ -32,7 +39,7 @@ public class Evaluator {
                 case ">":
                     return greaterThan(list.get(1), list.get(2));
                 case "cond":
-                    return cond(list.subList(1, list.size()), interpreter);
+                    return cond((List<Object>) list.subList(1, list.size()), interpreter);
                 default:
                     if (environment.containsKey(operator)) {
                         Function function = (Function) environment.get(operator);
@@ -75,6 +82,7 @@ public class Evaluator {
         return Double.parseDouble(a.toString()) > Double.parseDouble(b.toString());
     }
 
+    @SuppressWarnings("unchecked")
     private static Object cond(List<Object> conditions, Interpreter interpreter) {
         Map<String, Object> environment = interpreter.getEnvironment();
         for (Object condition : conditions) {

@@ -1,5 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Lexer {
@@ -14,21 +16,16 @@ public class Lexer {
         return modificada.trim().split("\\s+");
     }
 
-    public static void buscarPalabrasReservadas(String expresion) {
-        System.out.println("\nPalabras reservadas encontradas:");
-        boolean encontroPalabrasReservadas = false;
+    public static List<String> buscarPalabrasReservadas(String expresion) {
+        List<String> palabrasReservadasEncontradas = new ArrayList<>();
         String[] palabras = expresion.replaceAll("[()]", " ").split("\\s+");
 
         for (String palabra : palabras) {
             if (!palabra.isEmpty() && esPalabraReservada(palabra)) {
-                System.out.println("'" + palabra + "' es una palabra reservada de LISP");
-                encontroPalabrasReservadas = true;
+                palabrasReservadasEncontradas.add(palabra);
             }
         }
-
-        if (!encontroPalabrasReservadas) {
-            System.out.println("No se encontraron palabras reservadas en la expresión.");
-        }
+        return palabrasReservadasEncontradas;
     }
 
     public static boolean esPalabraReservada(String palabra) {
