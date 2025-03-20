@@ -46,6 +46,11 @@ public class Evaluator {
                 case "*":
                 case "/":
                     return interpreter.evaluateArithmetic(operator, list.subList(1, list.size()).toArray());
+                case "=":
+                    // Agregar esta parte para soportar la comparación
+                    Object left = evaluate(list.get(1), interpreter);
+                    Object right = evaluate(list.get(2), interpreter);
+                    return equal(left, right);
                 case "quote":
                     return list.size() > 1 ? list.get(1) : null;
                 case "defun":
@@ -109,7 +114,16 @@ public class Evaluator {
         return result;
     }
 
+    /*private static boolean equal(Object a, Object b) {
+        return a.equals(b);
+    }*/
+
     private static boolean equal(Object a, Object b) {
+        if (a instanceof Number && b instanceof Number) {
+            double numA = ((Number) a).doubleValue();
+            double numB = ((Number) b).doubleValue();
+            return Math.abs(numA - numB) < 1e-10; // Comparación con tolerancia para números de punto flotante
+        }
         return a.equals(b);
     }
 
