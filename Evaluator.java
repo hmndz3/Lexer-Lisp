@@ -40,7 +40,7 @@ public class Evaluator {
             }
             
             String operator = (String) list.get(0);
-            switch (operator) {
+            switch (operator.toLowerCase()) {
                 case "+":
                 case "-":
                 case "*":
