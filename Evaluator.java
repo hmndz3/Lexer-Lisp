@@ -74,13 +74,14 @@ public class Evaluator {
                         if (func instanceof Function) {
                             Function function = (Function) func;
                             Object[] args = list.subList(1, list.size()).toArray();
-                            return function.call(args, environment);
+                            return function.call(args, environment, interpreter);
                         } else {
                             return func; // Retornar el valor de la variable
                         }
                     } else {
                         throw new UnsupportedOperationException("Operador no soportado: " + operator);
                     }
+                    
             }
         } else {
             return expression;

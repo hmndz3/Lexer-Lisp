@@ -10,23 +10,21 @@ public class Function {
         this.body = body;
         this.interpreter = interpreter;
     }
-
-    public Object call(Object[] args, Map<String, Object> environment) {
-        // Crear una nueva instancia de Interpreter con el entorno actual
-        Interpreter localInterpreter = new Interpreter();
-        Map<String, Object> localEnv = localInterpreter.getEnvironment();
+    
+    // Se agrega el parámetro callingInterpreter para usar el entorno de llamada
+    public Object call(Object[] args, Map<String, Object> environment, Interpreter callingInterpreter) {
+        // Crear un intérprete temporal que inicialmente copia el entorno global
+        Interpreter tempInterpreter = new Interpreter();
+        tempInterpreter.getEnvironment().putAll(environment);
         
-        // Copiar el entorno global
-        localEnv.putAll(environment);
-        
-        // Agregar los parámetros al entorno local
-        for (int i = 0; i < parameters.length; i++) {
-            // Evaluar los argumentos
-            Object evaluatedArg = Evaluator.evaluate(args[i], interpreter);
-            localEnv.put(parameters[i].toString(), evaluatedArg);
+        // Evaluar cada argumento usando el intérprete temporal y asignarlo a su parámetro
+        for (int i = 0; i < parameters.length && i < args.length; i++) {
+            Object evaluatedArg = Evaluator.evaluate(args[i], tempInterpreter);
+            tempInterpreter.getEnvironment().put(parameters[i].toString(), evaluatedArg);
         }
         
-        // Evaluar el cuerpo usando el intérprete local
-        return Evaluator.evaluate(body, localInterpreter);
+        // Evaluar el cuerpo de la función con el intérprete temporal que ya tiene las variables locales
+        return Evaluator.evaluate(body, tempInterpreter);
     }
+    
 }
