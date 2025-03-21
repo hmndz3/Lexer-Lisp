@@ -2,7 +2,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Clase que evalúa las expresiones LISP.
+ * Contiene la lógica principal para evaluar diferentes tipos de expresiones
+ * como operaciones aritméticas, lógicas y funciones definidas por el usuario.
+ */
 public class Evaluator {
+    //------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Evalúa una expresión LISP y devuelve su resultado.
+     */
     @SuppressWarnings("unchecked")
     public static Object evaluate(Object expression, Interpreter interpreter) {
         Map<String, Object> environment = interpreter.getEnvironment();
@@ -92,7 +101,10 @@ public class Evaluator {
             return expression;
         }
     }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Implementa la funcionalidad del operador setq para asignar valores a variables.
+     */
     private static Object setq(List<Object> list, Interpreter interpreter) {
         Map<String, Object> environment = interpreter.getEnvironment();
         String variable = (String) list.get(1);
@@ -100,11 +112,20 @@ public class Evaluator {
         environment.put(variable, value);
         return value;
     }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Verifica si una expresión es un átomo (no es una lista).
+     * true si la expresión es un átomo, false en caso contrario
+     */
     private static boolean atom(Object expression) {
         return !(expression instanceof List);
     }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Crea una lista con los elementos proporcionados, evaluando cada uno.
+     * 
+     * @return Una lista con los elementos evaluados
+     */
     private static List<Object> list(List<Object> elements, Interpreter interpreter) {
         List<Object> result = new ArrayList<>();
         // Evaluar cada elemento de la lista
@@ -113,11 +134,11 @@ public class Evaluator {
         }
         return result;
     }
-
-    /*private static boolean equal(Object a, Object b) {
-        return a.equals(b);
-    }*/
-
+    //------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Compara si dos objetos son iguales, con manejo especial para números.
+     * @return true si los objetos son iguales, false en caso contrario
+     */
     private static boolean equal(Object a, Object b) {
         if (a instanceof Number && b instanceof Number) {
             double numA = ((Number) a).doubleValue();
@@ -126,15 +147,26 @@ public class Evaluator {
         }
         return a.equals(b);
     }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Compara si un valor es menor que otro.
+     * @return true si a es menor que b, false en caso contrario
+     */
     private static boolean lessThan(Object a, Object b) {
         return Double.parseDouble(a.toString()) < Double.parseDouble(b.toString());
     }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Compara si un valor es mayor que otro.
+     * @return true si a es mayor que b, false en caso contrario
+     */
     private static boolean greaterThan(Object a, Object b) {
         return Double.parseDouble(a.toString()) > Double.parseDouble(b.toString());
     }
-
+    //------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Implementa la funcionalidad del operador cond para evaluar condiciones.
+     */
     @SuppressWarnings("unchecked")
     private static Object cond(List<Object> conditions, Interpreter interpreter) {
         for (Object condition : conditions) {
@@ -155,4 +187,5 @@ public class Evaluator {
         }
         return null;
     }
+    //------------------------------------------------------------------------------------------------------------------------
 }

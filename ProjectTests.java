@@ -2,44 +2,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 
+/**
+ * Clase que contiene pruebas unitarias para verificar el correcto funcionamiento
+ * de las diferentes componentes del intérprete LISP.
+ */
 public class ProjectTests {
-
-    // Pruebas para la clase Lexer
-    @Test
-    public void testTokenizar() {
-        String expr = "(+ 1 2)";
-        String[] tokens = Lexer.tokenizar(expr);
-        assertArrayEquals(new String[]{"(", "+", "1", "2", ")"}, tokens);
-    }
-
-    @Test
-    public void testBuscarPalabrasReservadas() {
-        String expr = "(if (> 5 3) (print 5))";
-        List<String> reserved = Lexer.buscarPalabrasReservadas(expr);
-        // Se espera encontrar palabras como "if", ">" y "print" (todo en minúscula)
-        assertTrue(reserved.contains("if"));
-        assertTrue(reserved.contains(">"));
-        assertTrue(reserved.contains("print"));
-    }
-
-    @Test
-    public void testEsPalabraReservada() {
-        assertTrue(Lexer.esPalabraReservada("if"));
-        assertFalse(Lexer.esPalabraReservada("variable"));
-    }
-
-    // Pruebas para la clase Utils
-    @Test
-    public void testCantParentesisBalanced() {
-        assertTrue(Utils.cantParentesis("(+ 1 2)"));
-    }
-
-    @Test
-    public void testCantParentesisUnbalanced() {
-        assertFalse(Utils.cantParentesis("(()"));
-    }
-
-    // Prueba para la clase Parser
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la funcionalidad de Parser.parse.
+     */
     @Test
     public void testParserParse() {
         String expr = "(+ 1 2)";
@@ -53,7 +24,10 @@ public class ProjectTests {
         assertEquals("2", list.get(2));
     }
 
-    // Pruebas para las evaluaciones aritméticas a través de Interpreter
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la operación de suma en el intérprete.
+     */
     @Test
     public void testAddition() {
         Interpreter interpreter = new Interpreter();
@@ -61,6 +35,10 @@ public class ProjectTests {
         assertEquals(3, result);
     }
 
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la operación de resta en el intérprete.
+     */
     @Test
     public void testSubtraction() {
         Interpreter interpreter = new Interpreter();
@@ -68,6 +46,10 @@ public class ProjectTests {
         assertEquals(3, result);
     }
 
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la operación de multiplicación en el intérprete.
+     */
     @Test
     public void testMultiplication() {
         Interpreter interpreter = new Interpreter();
@@ -75,6 +57,10 @@ public class ProjectTests {
         assertEquals(6, result);
     }
 
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la operación de división en el intérprete.
+     */
     @Test
     public void testDivision() {
         Interpreter interpreter = new Interpreter();
@@ -82,7 +68,10 @@ public class ProjectTests {
         assertEquals(4, result);
     }
 
-    // Prueba para el operador de igualdad
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba el operador de igualdad.
+     */
     @Test
     public void testEquality() {
         Interpreter interpreter = new Interpreter();
@@ -90,7 +79,10 @@ public class ProjectTests {
         assertEquals(true, result);
     }
 
-    // Prueba para asignación de variables (setq)
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la asignación de variables con setq.
+     */
     @Test
     public void testSetq() {
         Interpreter interpreter = new Interpreter();
@@ -101,7 +93,10 @@ public class ProjectTests {
         assertEquals(10.0, xValue);
     }
 
-    // Prueba para el operador quote
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba el operador quote.
+     */
     @Test
     public void testQuote() {
         Interpreter interpreter = new Interpreter();
@@ -114,7 +109,10 @@ public class ProjectTests {
         assertEquals("3", list.get(2));
     }
 
-    // Prueba para la definición de funciones y llamada (defun)
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la definición y llamada de funciones con defun.
+     */
     @Test
     public void testDefunAndCall() {
         Interpreter interpreter = new Interpreter();
@@ -126,7 +124,10 @@ public class ProjectTests {
         assertEquals(25, callResult);
     }
 
-    // Prueba para el operador cond
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba el operador cond.
+     */
     @Test
     public void testCond() {
         Interpreter interpreter = new Interpreter();
@@ -135,7 +136,10 @@ public class ProjectTests {
         assertEquals("'Yes'", result);
     }
 
-    // Prueba para detectar paréntesis no balanceados en la evaluación
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la detección de paréntesis no balanceados.
+     */
     @Test
     public void testUnbalancedParentheses() {
         Interpreter interpreter = new Interpreter();
@@ -145,4 +149,57 @@ public class ProjectTests {
         String expectedMessage = "No están balanceados los paréntesis";
         assertTrue(exception.getMessage().contains(expectedMessage));
     }
+    //------------------------------------------------------------------------------------------------------------------------  
+/**
+     * Prueba la función tokenizar de la clase Lexer.
+     */
+    @Test
+    public void testTokenizar() {
+        String expr = "(+ 1 2)";
+        String[] tokens = Lexer.tokenizar(expr);
+        assertArrayEquals(new String[]{"(", "+", "1", "2", ")"}, tokens);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la función buscarPalabrasReservadas de la clase Lexer.
+     */
+    @Test
+    public void testBuscarPalabrasReservadas() {
+        String expr = "(if (> 5 3) (print 5))";
+        List<String> reserved = Lexer.buscarPalabrasReservadas(expr);
+        // Se espera encontrar palabras como "if", ">" y "print" (todo en minúscula)
+        assertTrue(reserved.contains("if"));
+        assertTrue(reserved.contains(">"));
+        assertTrue(reserved.contains("print"));
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la función esPalabraReservada de la clase Lexer.
+     */
+    @Test
+    public void testEsPalabraReservada() {
+        assertTrue(Lexer.esPalabraReservada("if"));
+        assertFalse(Lexer.esPalabraReservada("variable"));
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la función cantParentesis de la clase Utils con paréntesis balanceados.
+     */
+    @Test
+    public void testCantParentesisBalanced() {
+        assertTrue(Utils.cantParentesis("(+ 1 2)"));
+    }
+
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Prueba la función cantParentesis de la clase Utils con paréntesis no balanceados.
+     */
+    @Test
+    public void testCantParentesisUnbalanced() {
+        assertFalse(Utils.cantParentesis("(()"));
+    }
 }
+    //------------------------------------------------------------------------------------------------------------------------

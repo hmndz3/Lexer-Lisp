@@ -1,7 +1,15 @@
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Clase principal que contiene el punto de entrada de la aplicación.
+ */
 public class Main {
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Método principal que inicia la aplicación.
+     * 
+     */
     public static void main(String[] args) {
         Scanner lector = new Scanner(System.in);
         Interpreter interpreter = new Interpreter();
@@ -46,4 +54,5 @@ public class Main {
 
         lector.close();
     }
+    //------------------------------------------------------------------------------------------------------------------------  
 }

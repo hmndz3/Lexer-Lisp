@@ -2,9 +2,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Clase principal que interpreta y evalúa expresiones LISP.
+ * Mantiene un entorno con las variables y funciones definidas.
+ */
 public class Interpreter {
+    //------------------------------------------------------------------------------------------------------------------------  
+    // Atributos de la clase Interpreter
     private Map<String, Object> environment = new HashMap<>();
 
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Evalúa una expresión LISP en formato de cadena.
+     * @return El resultado de la evaluación
+     * @throws IllegalArgumentException Si los paréntesis no están balanceados
+     */
     public Object evaluate(String expression) {
         if (!Utils.cantParentesis(expression)) {
             throw new IllegalArgumentException("No están balanceados los paréntesis, revisar expresión ingresada");
@@ -15,6 +27,13 @@ public class Interpreter {
         return Evaluator.evaluate(parsedExpression, this);
     }
 
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Método alternativo para interpretar expresiones LISP ya parseadas.
+     * 
+     * La expresión LISP parseada a interpretar
+     * @return El resultado de la interpretación
+     */
     public Object interpretar(Object expresion) {
         if (expresion instanceof List) {
             List<?> lista = (List<?>) expresion;
@@ -66,6 +85,10 @@ public class Interpreter {
         return expresion;
     }
 
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Método auxiliar para comparar números según el operador proporcionado.
+     */
     private String relacionarNums(String operador, Object n1, Object n2) {
         if (!(n1 instanceof Number) || !(n2 instanceof Number)) {
             throw new RuntimeException("Valores incorrectos, deben ser números para compararse.");
@@ -78,6 +101,10 @@ public class Interpreter {
         : (primerNumero > segundoNumero ? "T" : "NIL");
     }
 
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Evalúa operaciones aritméticas con los operandos proporcionados.
+     */
     public Object evaluateArithmetic(String operator, Object[] operands) {
         double resultado = 0;
         
@@ -128,16 +155,31 @@ public class Interpreter {
         return resultado;
     }
 
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Implementa la funcionalidad de quote para evitar la evaluación de una expresión.
+     */
     public Object quote(Object expression) {
         return expression;
     }
 
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Define una nueva función con el nombre, parámetros y cuerpo especificados.
+     * 
+     */
     public void defun(String functionName, Object[] parameters, Object body) {
         Function function = new Function(parameters, body, this);
         environment.put(functionName, function);
     }
 
+    //------------------------------------------------------------------------------------------------------------------------  
+    /**
+     * Obtiene el entorno actual del intérprete.
+     * @return El mapa que representa el entorno con las variables y funciones definidas
+     */
     public Map<String, Object> getEnvironment() {
         return environment;
     }
+    //------------------------------------------------------------------------------------------------------------------------  
 }
